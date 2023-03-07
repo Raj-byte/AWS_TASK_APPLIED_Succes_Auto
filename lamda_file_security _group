@@ -1,0 +1,48 @@
+import boto3
+ec2 = boto3.client('ec2',region_name='us-east-1')
+
+sglist=[]
+def sgCheck():
+    response = ec2.describe_security_groups()
+    for i in response['SecurityGroups']:
+        print ("The Ingress rules are as follows: ")
+        for j in i['IpPermissions']:
+            print ("Security Group Name: "+i['GroupName'])
+            sglist.append(i['GroupName'])
+            # print ("IP Protocol: "+j['IpProtocol'])
+
+            try:
+                if j['ToPort'] != 80 and j['ToPort'] != 443 :
+                    print("Port opened: "+str(j['ToPort']))
+            except Exception:
+                print ("No ports enables")
+                continue
+    return sglist
+    =========================================================================================
+    this above code is used to check port in aws account. using lambda
+    =========================================================================================
+    
+    #######################################################################################
+    
+    #!/usr/bin/python
+import boto3
+ec2 = boto3.resource('ec2')
+sgs = ec2.security_groups.all()
+security_groups = [sg.id for sg in sgs]
+print(security_groups)
+for security_group in security_groups:
+    sg = ec2.SecurityGroup(security_group)   
+    
+
+
+    for i in range(len(sg.ip_permissions)):
+        print(sg.ip_permissions)
+        for j in range(len(sg.ip_permissions[i]['IpRanges'])):
+            if "0.0.0.0/0" in sg.ip_permissions[i]['IpRanges'][j]['CidrIp']:
+                # print(sg.group_name, sg.ip_permissions[i]['ToPort'], sg.ip_permissions[i]['IpRanges'][j]['CidrIp'])
+                print(sg.group_name+ "found")```
+                
+           =================================================================================================================
+           This above code is used to find the details of security group .. using lambda
+           -========================================================================================
+           #######
